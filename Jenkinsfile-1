@@ -7,6 +7,8 @@ pipeline {
         sh '''
           echo $PATH
           ansible-galaxy collection install paloaltonetworks.panos
+          pip install pan-python
+          pip install pandevice
         '''
       }
     }
