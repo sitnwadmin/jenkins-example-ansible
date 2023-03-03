@@ -1,0 +1,35 @@
+---
+- name: Creating Lucidyne Schedule 
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  collections:
+    - paloaltonetworks.panos
+  vars:
+    panorama:
+      api_key: '{{ pan_api_key }}'
+      ip_address: '{{ panorama_ip }}'
+  vars_files:
+    - ../group_vars/vars_palo_config_update_lucidyne_schedule.yml
+  tasks:
+  - name: Create non-recurring schedule object
+    paloaltonetworks.panos.panos_schedule_object:
+      provider: '{{ panorama }}'
+      device_group: '{{ palo_device_group }}'
+      name: '{{ schedule_name }}'
+      type: '{{ schedule_type }}'
+      non_recurring_date_time: '{{ date_time }}'
+      state: present
+
+  - name: commit specific device group changes on panorama
+    paloaltonetworks.panos.panos_commit_panorama:
+      provider: '{{ panorama }}'
+      device_groups: '{{ palo_device_group }}'
+
+  - name: push device group to firewall
+    paloaltonetworks.panos.panos_commit_push:
+      provider: '{{ panorama }}'
+      style: 'device group'
+      name: '{{ palo_device_group }}'
+      sync: True
+      include_template: false
