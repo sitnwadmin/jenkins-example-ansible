@@ -6,7 +6,7 @@ pipeline {
       steps {
         sh '''
           echo $PATH
-          ansible-galaxy-3 collection install paloaltonetworks.panos
+          ansible-galaxy collection install paloaltonetworks.panos
         '''
       }
     }
